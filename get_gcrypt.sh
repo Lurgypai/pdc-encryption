@@ -1,8 +1,13 @@
 #!/bin/bash
 
-pushd dependencies > /dev/null
+if [[ -z $WORK_SPACE ]]; then
+    WORK_SPACE=$(realpath .)
+fi
 
-INSTALL_DIR=$(pwd)
+SOURCE_DIR=$WORK_SPACE/source
+INSTALL_DIR=$WORK_SPACE/install
+
+pushd $SOURCE_DIR > /dev/null
 
 GPG_ERROR_CONFIG=$(which gpg-error-config)
 if [[ -z ${GPG_ERROR_CONFIG} ]]; then
@@ -13,7 +18,7 @@ if [[ -z ${GPG_ERROR_CONFIG} ]]; then
     echo "Compiling gpg error"
     pushd "libgpg-error-1.56" > /dev/null
     ./autogen.sh
-    ./configure --prefix=${INSTALL_DIR}/gpgerror-ins --enable-install-gpg-error-config
+    ./configure --prefix=${INSTALL_DIR}/gpgerror --enable-install-gpg-error-config
     make -j`nproc` && make install
     popd > /dev/null
 else
@@ -27,7 +32,7 @@ if [[ -z ${GCRYPT_CONFIG} ]]; then
     tar -xvf "libgcrypt-1.11.2.tar.bz2"
     rm "libgcrypt-1.11.2.tar.bz2"
     pushd "libgcrypt-1.11.2" > /dev/null
-    ./configure --prefix=${INSTALL_DIR}/gcrypt-ins --with-libgpg-error-prefix=${INSTALL_DIR}/gpgerror-ins
+    ./configure --prefix=${INSTALL_DIR}/gcrypt --with-libgpg-error-prefix=${INSTALL_DIR}/gpgerror
     make -j`nproc` && make install
     popd > /dev/null
 else
