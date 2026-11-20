@@ -16,6 +16,7 @@ cd $WORK_SPACE/source
 git clone -q --branch v1.18.0 --depth 1 https://github.com/ofiwg/libfabric.git libfabric
 git clone https://github.com/mercury-hpc/mercury --recursive
 git clone https://github.com/Lurgypai/enc_wrapper.git
+
 git clone https://github.com/Lurgypai/pdc.git
 
 export LIBFABRIC_SRC_DIR=$WORK_SPACE/source/libfabric
@@ -123,6 +124,10 @@ echo 'export LD_LIBRARY_PATH="$ENCWRAPPER_DIR/lib:$LD_LIBRARY_PATH"' >> $WORK_SP
 echo 'export PATH="$ENCWRAPPER_DIR/include:$PATH"' >> $WORK_SPACE/pdc_env.sh
 
 echo "===== SETTING UP PDC ====="
+cd $PDC_SRC_DIR
+git checkout add-more-encryption
+
+cd $WORK_SPACE
 ./compile_pdc.sh
 
 export LD_LIBRARY_PATH="$PDC_DIR/lib:$LD_LIBRARY_PATH"
